@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 aio-pika = "*"
 aiomultiprocess = "*"
+redis = "*"
+aiokafka = "*"
 
 [requires]
 python_version = "3.7"
