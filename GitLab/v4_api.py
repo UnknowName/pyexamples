@@ -66,6 +66,8 @@ class BaseManager(object):
             async with sessoin.delete(url, headers=self.headers) as resp:
                 if resp.status == 204 and (await resp.text() == 1):
                     return True
+                import sys
+                sys.stdout.write("\033[93mWarning: Delete Failed, Reason: {}\033[0m\n".format(await resp.text()))
                 return None
 
     async def all(self):
@@ -127,7 +129,7 @@ async def main():
     projects = await gitlab.project.search("daohao")
     project = projects[0]
     pipelines = await project.pipelines.all()
-    print(pipelines)
+    await project.pipelines.delete(pipelines[-1])
 
 
 if __name__ == '__main__':
