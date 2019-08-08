@@ -19,14 +19,16 @@ async def run(cmd: str) -> None:
         print("Error,{}".format(stderr.decode()))
 
 
-async def exec(filename: str) -> None:
+async def exec(cmd: str, *args) -> None:
     """
-    Exec: 启动一个新进程，新进程执行名为filename的可执行文件。如果带参数会被认为是文件名的一部分
-    :param filename:
+    Exec: 启动一个新进程，新进程执行名为cmd的可执行文件。args是命令的相关参数
+    :param cmd:
+    :param args:
     :return:
     """
     process = await asyncio.subprocess.create_subprocess_exec(
-        filename,
+        cmd,
+        *args,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
