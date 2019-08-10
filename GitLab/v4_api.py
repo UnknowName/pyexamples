@@ -1,3 +1,5 @@
+import sys
+
 import aiohttp
 
 
@@ -45,6 +47,10 @@ class BaseManager(object):
                     else:
                         obj = self._add_attr(base_url=url, resource_name=self.resource, dict_resp=response)
                         return next_page, obj
+                else:
+                    err_msg = await resp.text()
+                    sys.stdout.write("\033[93m{}\033[0m\n".format(err_msg))
+                    exit(2)
             return None, None
 
     async def get(self, resource_id: int):
@@ -66,8 +72,7 @@ class BaseManager(object):
             async with sessoin.delete(url, headers=self.headers) as resp:
                 if resp.status == 204 and (await resp.text() == 1):
                     return True
-                import sys
-                sys.stdout.write("\033[93mWarning: Delete Failed, Reason: {}\033[0m\n".format(await resp.text()))
+                sys.stdout.write("\033[93mDelete Failed, Reason: {}\033[0m\n".format(await resp.text()))
                 return None
 
     async def all(self):
