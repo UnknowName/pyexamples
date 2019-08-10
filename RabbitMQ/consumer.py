@@ -1,16 +1,20 @@
+import os
 import asyncio
 
 import aio_pika
 
 
 async def main(loop):
+    _host = os.getenv("RABBITMQ_SERVER")
+    _user = os.getenv("RABBITMQ_USER")
+    _password = os.getenv("RABBITMQ_PASSWORD")
+    conn_str = "amqp://{user}:{password}@{host}".format(user=_user, host=_host, password=_password)
+
     try:
-        conn = await aio_pika.connect_robust(
-            "amqp://guest:siss.rabbit.dev@128.0.100.172", loop=loop
-        )
+        conn = await aio_pika.connect_robust(conn_str, loop=loop)
     except Exception as e:
         print(e)
-        return
+        exit(2)
     async with conn:
         queue_name = "test_queue"
         channel = await conn.channel()
@@ -28,6 +32,7 @@ async def main(loop):
                     if queue.name in message.body.decode():
                         print(queue.name)
                         break
+                    await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
