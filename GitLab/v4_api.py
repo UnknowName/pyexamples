@@ -94,7 +94,7 @@ class BaseManager(object):
         # print("Search URL is ", _url)
         totals = resp
         while next_page:
-            next_page, objects = await self._fetch("{}?page={}".format(url, next_page))
+            next_page, objects = await self._fetch("{}?page={}".format(_url, next_page))
             totals += objects
         return totals
 
