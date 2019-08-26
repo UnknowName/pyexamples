@@ -24,14 +24,18 @@ async def main():
     # Query many
     async for doc in collect.find({}).sort("_id"):
         print(doc)
+    # Delete
+    deleted = await collect.delete_many({"name": "chengjn"})
+    deleted = await collect.delete_many({"_class": "cn.com.siss"})
+    print("Delete count is ", deleted.deleted_count)
     # Insert One
-    add_user = dict(_id="12", name="chengjn", _class="cn.com.siss.mongo.entity.User", email="burrt@sina.com")
+    add_user = dict(_id="12", name="chengjn", _class="cn.com.siss.mongo.entity.User", email="burtte@sina.com")
     result = await collect.insert_one(add_user)
-    print(result.inserted_id)
+    print("Insert ID is", result.inserted_id)
     # Insert Many
     users = [dict(_id=str(i), name="cheng" + str(i), _class="cn.com.siss") for i in range(20, 100)]
     results = await collect.insert_many(users)
-    print(results)
+    print("Insert Success is ", results.acknowledged)
 
 
 if __name__ == '__main__':
