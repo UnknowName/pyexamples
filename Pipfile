@@ -1,4 +1,4 @@
-[[source]]
+git[[source]]
 name = "pypi"
 url = "https://mirrors.aliyun.com/pypi/simple/"
 verify_ssl = true
@@ -6,7 +6,10 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-
+aio-pika = "*"
+aiomultiprocess = "*"
+aiohttp = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.7"
