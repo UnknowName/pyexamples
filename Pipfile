@@ -1,6 +1,7 @@
-git[[source]]
+[[source]]
 name = "pypi"
-url = "https://mirrors.aliyun.com/pypi/simple/"
+# url = "https://mirrors.aliyun.com/pypi/simple/"
+url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
@@ -10,6 +11,10 @@ aio-pika = "*"
 aiomultiprocess = "*"
 aiohttp = "*"
 openpyxl = "*"
+wmi = "*"
+pywin32 = "*"
+elasticsearch-dsl = "*"
+aiokafka = "*"
 
 [requires]
 python_version = "3.7"
