@@ -19,6 +19,9 @@ class BaseManager(object):
 
     def _add_attr(self, base_url: str, resource_name: str, dict_resp: dict):
         obj = type(resource_name, (BaseManager,), dict_resp)
+        # 将属性添加进对象
+        if '?' in base_url:
+            base_url = base_url.split('?')[0]
         if hasattr(self, "attrs"):
             for attr in self.attrs:
                 attr_obj = type(attr, (BaseManager,), {"resource": attr})(self.gitlab)
@@ -49,7 +52,7 @@ class BaseManager(object):
                         return next_page, obj
                 else:
                     err_msg = await resp.text()
-                    sys.stdout.write("\033[93m{}\033[0m\n".format(err_msg))
+                    sys.stdout.write("\033[93m erro {} \033[0m\n".format(url, err_msg))
                     exit(2)
             return None, None
 
@@ -70,7 +73,7 @@ class BaseManager(object):
         # print("Delete URL is ", url)
         async with self.session() as sessoin:
             async with sessoin.delete(url, headers=self.headers) as resp:
-                if resp.status == 204 and (await resp.text() == 1):
+                if resp.status == 204:
                     return True
                 sys.stdout.write("\033[93mDelete Failed, Reason: {}\033[0m\n".format(await resp.text()))
                 return None
@@ -116,25 +119,27 @@ async def main():
     pipeline = await project.pipelines.get(resource_id=259)
     if pipeline:
         print("Pipeline duration is ", pipeline.duration)
-    # Get all projects
-    projects = await gitlab.project.all()
-    print("Total projects is ", len(projects))
-    # Get all project's pipelines
-    pipelines = await projects[0].pipelines.all()
-    print("Project pipeline is ", pipelines)
-    project = await gitlab.project.get(37)
-    pipelines = await project.pipelines.all()
-    if pipelines:
-        await project.pipelines.delete(pipelines[-1].id)
-        print("Delete Pipeline success")
-    else:
-        print("The project seems no pipeline yet")
-    """
+        
     # Search project by keyword daohao
     projects = await gitlab.project.search("daohao")
     project = projects[0]
     pipelines = await project.pipelines.all()
-    await project.pipelines.delete(pipelines[-1])
+    # print(pipelines[0].id)
+    await project.pipelines.delete(pipelines[0].id)
+    """
+    # Get all project's pipelines and delete the pipelines
+    projects = await gitlab.project.all()
+    for project in projects:
+        if project.archived:
+            sys.stdout.write("\033[93m{} only read project.Skip it\033[0m\n".format(project.name_with_namespace))
+            continue
+        pipelines = await project.pipelines.all()
+        if pipelines:
+            for pipeline in pipelines:
+                await project.pipelines.delete(pipeline.id)
+        else:
+            pass
+            print("The project seems no pipeline yet")
 
 
 if __name__ == '__main__':
