@@ -5,9 +5,12 @@ import aio_pika
 
 
 async def main(loop):
+    """
     _host = os.getenv("RABBITMQ_SERVER")
     _user = os.getenv("RABBITMQ_USER")
     _password = os.getenv("RABBITMQ_PASSWORD")
+    """
+    _host, _user, _password = "128.0.100.170", "guest", "guest"
     conn_str = "amqp://{user}:{password}@{host}".format(user=_user, host=_host, password=_password)
 
     try:
@@ -32,7 +35,7 @@ async def main(loop):
                     if queue.name in message.body.decode():
                         print(queue.name)
                         break
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(0.1)
 
 
 if __name__ == "__main__":
