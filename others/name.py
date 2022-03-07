@@ -64,7 +64,7 @@ def main():
         for word in get(url):
             name_result = score(word)
             print(word, name_result)
-            if name_result.score == 88 \
+            if name_result.score >= 88 \
                     and name_result.sc != "凶" \
                     and name_result.base != "凶" \
                     and name_result.success != "凶":
